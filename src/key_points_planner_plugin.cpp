@@ -8,10 +8,11 @@
 #include <nav_msgs/Path.h>
 #include <nav_core/base_global_planner.h>
 #include <std_srvs/Trigger.h>
+#include <pluginlib/class_list_macros.h>
 
 using namespace std;
 
-namespace global_planner
+namespace key_points_planner
 {
     class KeyPointsPlanner : public nav_core::BaseGlobalPlanner
     {
@@ -157,3 +158,5 @@ namespace global_planner
         }
     };
 }
+
+PLUGINLIB_EXPORT_CLASS(key_points_planner::KeyPointsPlanner, nav_core::BaseGlobalPlanner)

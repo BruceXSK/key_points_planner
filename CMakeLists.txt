@@ -9,6 +9,7 @@ FIND_PACKAGE(
         std_msgs
         nav_core
         tf2_ros
+        pluginlib
 )
 
 CATKIN_PACKAGE()
@@ -18,8 +19,16 @@ INCLUDE_DIRECTORIES(
         ${catkin_INCLUDE_DIRS}
 )
 
-#ADD_EXECUTABLE(key_points_planner_node src/key_points_planner_node.cpp)
-#TARGET_LINK_LIBRARIES(key_points_planner_node ${catkin_LIBRARIES})
+# ADD_EXECUTABLE(key_points_planner_node src/key_points_planner_node.cpp)
+# TARGET_LINK_LIBRARIES(key_points_planner_node ${catkin_LIBRARIES})
 
 ADD_LIBRARY(key_points_planner src/key_points_planner_plugin.cpp)
 TARGET_LINK_LIBRARIES(key_points_planner ${catkin_LIBRARIES})
+
+INSTALL(TARGETS key_points_planner
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+
+INSTALL(FILES key_points_planner_plugin.xml
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
