@@ -18,8 +18,8 @@ INCLUDE_DIRECTORIES(
         ${catkin_INCLUDE_DIRS}
 )
 
-ADD_EXECUTABLE(key_points_planner_node src/key_points_planner_node.cpp)
-TARGET_LINK_LIBRARIES(key_points_planner_node ${catkin_LIBRARIES})
+#ADD_EXECUTABLE(key_points_planner_node src/key_points_planner_node.cpp)
+#TARGET_LINK_LIBRARIES(key_points_planner_node ${catkin_LIBRARIES})
 
 ADD_LIBRARY(key_points_planner src/key_points_planner_plugin.cpp)
 TARGET_LINK_LIBRARIES(key_points_planner ${catkin_LIBRARIES})
