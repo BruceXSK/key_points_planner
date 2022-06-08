@@ -1,0 +1,5 @@
+<library path="lib/libkey_points_planner">
+    <class name="key_points_planner/KeyPointsPlanner" type="key_points_planner::KeyPointsPlanner" base_class_type="nav_core::BaseGlobalPlanner">
+        <description> </description>
+    </class>
+</library>
