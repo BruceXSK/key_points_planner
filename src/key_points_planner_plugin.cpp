@@ -7,6 +7,7 @@
 #include <geometry_msgs/PointStamped.h>
 #include <nav_msgs/Path.h>
 #include <nav_core/base_global_planner.h>
+#include <std_srvs/Trigger.h>
 
 using namespace std;
 
@@ -15,14 +16,10 @@ namespace global_planner
     class KeyPointsPlanner : public nav_core::BaseGlobalPlanner
     {
     public:
-        KeyPointsPlanner() = default;
+        KeyPointsPlanner() : nh("~"), tfListener(buffer)
+        {}
 
-        KeyPointsPlanner(string name, costmap_2d::Costmap2DROS *costmap_ros) : nh("~"), tfListener(buffer)
-        {
-
-        }
-
-        void initialize(string name, costmap_2d::Costmap2DROS *costmap_ros)
+        void initialize(string name, costmap_2d::Costmap2DROS *costmap_ros) override
         {
             nh.getParam("base_frame", baseFrame);
             nh.getParam("global_frame", globalFrame);
@@ -30,13 +27,14 @@ namespace global_planner
 
             pointSub = nh.subscribe("/clicked_point", 1, &KeyPointsPlanner::pointCallback, this);
             pathTmpPub = nh.advertise<nav_msgs::Path>("path_tmp", 1);
+            clearSrv = nh.advertiseService("clear", &KeyPointsPlanner::clearKeyPoints, this);
 
             ROS_INFO("KeyPointsPlanner initialized");
         }
 
         bool makePlan(const geometry_msgs::PoseStamped &start,
                       const geometry_msgs::PoseStamped &goal,
-                      std::vector<geometry_msgs::PoseStamped> &plan)
+                      std::vector<geometry_msgs::PoseStamped> &plan) override
         {
             plan.clear();
             plan.shrink_to_fit();
@@ -84,8 +82,6 @@ namespace global_planner
                 plan.emplace_back(keyPose);
             }
 
-            keyPoints.clear();
-
             return true;
         }
 
@@ -99,6 +95,7 @@ namespace global_planner
 
         ros::Subscriber pointSub;
         ros::Publisher pathTmpPub;
+        ros::ServiceServer clearSrv;
 
         vector<geometry_msgs::Point> keyPoints;
 
@@ -151,6 +148,12 @@ namespace global_planner
                 ROS_WARN_STREAM(e.what());
                 return nullptr;
             }
+        }
+
+        bool clearKeyPoints(std_srvs::Trigger::Request &req, std_srvs::Trigger::Response &res)
+        {
+            keyPoints.clear();
+            return true;
         }
     };
 }
